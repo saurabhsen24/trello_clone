@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "522615550365",
+    "firebase_url": "https://fir-authdemo-18f41.firebaseio.com",
+    "project_id": "fir-authdemo-18f41",
+    "storage_bucket": "fir-authdemo-18f41.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522615550365:android:021440c428fb0932a8bf74",
+        "android_client_info": {
+          "package_name": "com.saurabhsen.projectmanagementapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "522615550365-i5a8943emp8qd0a4jdutimsr3a7c0ie1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdHcn0bMiePThztwunXZmRbQQz5w_wi18"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "522615550365-i5a8943emp8qd0a4jdutimsr3a7c0ie1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
