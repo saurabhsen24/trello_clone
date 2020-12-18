@@ -47,6 +47,12 @@ class CreateBoardActivity : BaseActivity() {
         if(intent.hasExtra(Constants.EDIT_BOARD)){
             mBoardDetails = intent.getParcelableExtra(Constants.EDIT_BOARD)!!
             et_board_name.setText(mBoardDetails.name)
+            Glide
+                .with(this)
+                .load(mBoardDetails.image)
+                .centerCrop()
+                .placeholder(R.drawable.ic_board_place_holder)
+                .into(iv_board_image)
             Log.i("CreateBoard[check id]",mBoardDetails.toString())
             btn_create.visibility = View.GONE
             btn_update.visibility = View.VISIBLE
@@ -116,6 +122,9 @@ class CreateBoardActivity : BaseActivity() {
     private fun updateBoard(){
         val assignedUsersArrayList: ArrayList<String> = ArrayList()
         assignedUsersArrayList.add(getCurrentUserID())
+        if(mBoardImageURL == ""){
+            mBoardImageURL = mBoardDetails.image
+        }
         val board = Board(
             et_board_name.text.toString(),
             mBoardImageURL,
