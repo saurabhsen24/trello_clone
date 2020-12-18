@@ -63,7 +63,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/authentication_screen_til_marginStartEnd"
                     android:layout_marginEnd="@dimen/authentication_screen_til_marginStartEnd"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:theme="@style/HelperTextAppearance"
+                    style="@style/CustomTextInputLayout">
 
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/et_name"
@@ -80,7 +81,8 @@
                     android:layout_marginStart="@dimen/authentication_screen_til_marginStartEnd"
                     android:layout_marginTop="@dimen/authentication_screen_til_marginTop"
                     android:layout_marginEnd="@dimen/authentication_screen_til_marginStartEnd"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:theme="@style/HelperTextAppearance"
+                    style="@style/CustomTextInputLayout">
 
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/et_email"
@@ -97,7 +99,9 @@
                     android:layout_marginStart="@dimen/authentication_screen_til_marginStartEnd"
                     android:layout_marginTop="@dimen/authentication_screen_til_marginTop"
                     android:layout_marginEnd="@dimen/authentication_screen_til_marginStartEnd"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    app:passwordToggleEnabled="true"
+                    android:theme="@style/HelperTextAppearance"
+                    style="@style/CustomTextInputLayout">
 
                     <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/et_password"
@@ -108,7 +112,7 @@
                         android:textSize="16sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <Button
+                <TextView
                     android:id="@+id/btn_sign_up"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
