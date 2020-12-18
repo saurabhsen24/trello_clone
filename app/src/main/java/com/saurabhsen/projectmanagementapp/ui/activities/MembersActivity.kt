@@ -3,24 +3,39 @@ package com.saurabhsen.projectmanagementapp.ui.activities
 import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
 import com.saurabhsen.projectmanagementapp.R
 import com.saurabhsen.projectmanagementapp.adapters.MemberListItemsAdapter
+import com.saurabhsen.projectmanagementapp.api.RetrofitInstance
 import com.saurabhsen.projectmanagementapp.firebase.FirestoreClass
 import com.saurabhsen.projectmanagementapp.models.Board
+import com.saurabhsen.projectmanagementapp.models.NotificationData
+import com.saurabhsen.projectmanagementapp.models.PushNotification
 import com.saurabhsen.projectmanagementapp.models.User
+import com.saurabhsen.projectmanagementapp.repository.NotificationRepository
 import com.saurabhsen.projectmanagementapp.utils.Constants
+import com.saurabhsen.projectmanagementapp.viewmodel.NotificationViewModel
+import com.saurabhsen.projectmanagementapp.viewmodel.NotificationViewModelProviderFactory
 import kotlinx.android.synthetic.main.activity_members.*
 import kotlinx.android.synthetic.main.dialog_search_member.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MembersActivity : BaseActivity() {
 
-    private lateinit var mBoardDetails: Board
-    private lateinit var mAssignedMembersList: ArrayList<User>
+    lateinit var mBoardDetails: Board
+    lateinit var mAssignedMembersList: ArrayList<User>
     private var anyChangesMade: Boolean = false
+    private lateinit var viewModel: NotificationViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +43,10 @@ class MembersActivity : BaseActivity() {
         if(intent.hasExtra(Constants.BOARD_DETAIL)){
             mBoardDetails = intent.getParcelableExtra(Constants.BOARD_DETAIL)!!
         }
+
+        val notificationRepository = NotificationRepository()
+        val viewModelProviderFactory = NotificationViewModelProviderFactory(notificationRepository)
+        viewModel = ViewModelProvider(this, viewModelProviderFactory).get(NotificationViewModel::class.java)
 
         setupActionBar()
 
@@ -55,6 +74,25 @@ class MembersActivity : BaseActivity() {
         mAssignedMembersList.add(user)
         anyChangesMade = true
         setupMembersList(mAssignedMembersList)
+        Toast.makeText(this, "Notification", Toast.LENGTH_SHORT).show()
+        val notification = NotificationData(
+            "Assigned to the Board ${mBoardDetails.name}",
+            "You have been assigned to the new board by ${mAssignedMembersList[0].name}"
+        )
+
+        val pushNotification = PushNotification(notification, user.fcmToken!!)
+        sendNotification(pushNotification)
+    }
+
+    fun sendNotification(notification: PushNotification){
+        lifecycleScope.launch {
+            viewModel.sendNotification(notification).join()
+            withContext(Dispatchers.Main){
+                if(viewModel.message != null){
+                    Toast.makeText(this@MembersActivity, viewModel.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     override fun onBackPressed() {

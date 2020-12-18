@@ -7,6 +7,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.saurabhsen.projectmanagementapp.models.Board
+import com.saurabhsen.projectmanagementapp.models.NotificationData
+import com.saurabhsen.projectmanagementapp.models.PushNotification
 import com.saurabhsen.projectmanagementapp.models.User
 import com.saurabhsen.projectmanagementapp.ui.activities.*
 import com.saurabhsen.projectmanagementapp.utils.Constants

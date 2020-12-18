@@ -1,4 +1,4 @@
-package com.saurabhsen.projectmanagementapp.dialogs
+package com.saurabhsen.projectmanagementapp.ui.dialogs
 
 import android.app.Dialog
 import android.content.Context
