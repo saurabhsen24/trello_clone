@@ -2,7 +2,6 @@ package com.saurabhsen.projectmanagementapp.ui.activities
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -17,7 +16,6 @@ import com.saurabhsen.projectmanagementapp.models.Card
 import com.saurabhsen.projectmanagementapp.models.Task
 import com.saurabhsen.projectmanagementapp.models.User
 import com.saurabhsen.projectmanagementapp.utils.Constants
-import kotlinx.android.synthetic.main.activity_my_profile.*
 import kotlinx.android.synthetic.main.activity_task_list.*
 
 class TaskListActivity : BaseActivity() {

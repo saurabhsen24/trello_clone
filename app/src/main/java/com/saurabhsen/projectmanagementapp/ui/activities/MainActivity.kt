@@ -10,17 +10,21 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
-import com.projemanag.adapters.BoardItemsAdapter
+import com.saurabhsen.projectmanagementapp.adapters.BoardItemsAdapter
 import com.saurabhsen.projectmanagementapp.R
 import com.saurabhsen.projectmanagementapp.firebase.FirestoreClass
 import com.saurabhsen.projectmanagementapp.models.Board
 import com.saurabhsen.projectmanagementapp.models.User
 import com.saurabhsen.projectmanagementapp.utils.Constants
+import com.saurabhsen.projectmanagementapp.utils.SwipeToDeleteCallback
+import com.saurabhsen.projectmanagementapp.utils.SwipeToEditCallback
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -31,6 +35,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     companion object {
         const val MY_PROFILE_REQUEST_CODE = 11
         const val CREATE_BOARD_REQUEST_CODE = 12
+        const val EDIT_BOARD_REQUEST_CODE = 17
     }
 
     private var mUserName: String = ""
@@ -95,6 +100,26 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 }
 
             })
+
+            val editSwipeHandler = object: SwipeToEditCallback(this){
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val adapter = rv_boards_list.adapter as BoardItemsAdapter
+                    adapter.notifyEditItem(this@MainActivity, viewHolder.adapterPosition, EDIT_BOARD_REQUEST_CODE)
+                }
+            }
+
+            val editItemTouchHelper = ItemTouchHelper(editSwipeHandler)
+            editItemTouchHelper.attachToRecyclerView(rv_boards_list)
+
+            val deleteSwipeHandler = object: SwipeToDeleteCallback(this){
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val adapter = rv_boards_list.adapter as BoardItemsAdapter
+                    adapter.removeAt(viewHolder.adapterPosition)
+                }
+            }
+
+            val deleteItemTouchHelper = ItemTouchHelper(deleteSwipeHandler)
+            deleteItemTouchHelper.attachToRecyclerView(rv_boards_list)
         }else{
             rv_boards_list.visibility = View.GONE
             tv_no_boards_available.visibility = View.VISIBLE
@@ -122,7 +147,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         if(resultCode == Activity.RESULT_OK){
             if(requestCode == MY_PROFILE_REQUEST_CODE){
                 FirestoreClass().loadUserData(this)
-            }else if(requestCode == CREATE_BOARD_REQUEST_CODE){
+            }else if(requestCode == CREATE_BOARD_REQUEST_CODE || requestCode == EDIT_BOARD_REQUEST_CODE){
                 FirestoreClass().getBoardsList(this)
             }
         }else{

@@ -5,7 +5,7 @@ import android.os.Parcelable
 
 data class Board(
     val name: String = "",
-    val image: String = "",
+    var image: String = "",
     val createdBy: String = "",
     val assignedTo: ArrayList<String> = ArrayList(),
     var documentId: String = "",

@@ -46,6 +46,38 @@ class FirestoreClass {
             }
     }
 
+    fun updateBoard(activity: CreateBoardActivity, board: Board){
+        val boardHashMap = HashMap<String,Any>()
+        boardHashMap[Constants.NAME] = board.name
+        boardHashMap[Constants.IMAGE] = board.image
+        mFireStore
+            .collection(Constants.BOARDS)
+            .document(board.documentId)
+            .update(boardHashMap)
+            .addOnSuccessListener {
+                Log.i(activity.javaClass.simpleName, "Board Updated")
+                Toast.makeText(activity, "Board Updated successfully", Toast.LENGTH_SHORT).show()
+                activity.boardCreatedSuccessfully()
+            }
+            .addOnFailureListener {
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName, it.message.toString())
+            }
+    }
+
+    fun deleteBoard(board: Board){
+        mFireStore
+            .collection(Constants.BOARDS)
+            .document(board.documentId)
+            .delete()
+            .addOnSuccessListener {
+                Log.i("Board_Del", "Board deleted")
+            }
+            .addOnFailureListener {
+                Log.i("Board_Del","Some error occurred")
+            }
+    }
+
     fun getBoardsList(activity: MainActivity){
         mFireStore
             .collection(Constants.BOARDS)

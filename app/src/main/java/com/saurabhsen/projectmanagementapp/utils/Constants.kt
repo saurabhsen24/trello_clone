@@ -32,6 +32,7 @@ object Constants {
     const val FCM_TOKEN = "fcmToken"
     const val FCM_BASE_URL:String = "https://fcm.googleapis.com/fcm/"
     const val CONTENT_TYPE = "application/json"
+    const val EDIT_BOARD = "edit_board"
     const val FCM_SERVER_KEY:String = "AAAAea5QcZ0:APA91bEIgqSIXBEgNRu-Fe9ucKtlttuus5ogyDhUs2gBxeiMGNxwAf8WFpmY2DpG5AYqy-dNdzS2H4kHna_4KutvwuXWoAlA3hBIfkEYmLKD338Nr2HlXppW8VQAW-32pWIlklqss-Nc"
 
     fun getFileExtension(activity: Activity,uri: Uri?): String? {

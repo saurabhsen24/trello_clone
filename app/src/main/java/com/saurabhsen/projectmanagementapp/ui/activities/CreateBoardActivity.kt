@@ -5,9 +5,9 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -25,7 +25,9 @@ class CreateBoardActivity : BaseActivity() {
 
     private var mSelectedImageFileUri: Uri? = null
     private lateinit var mUserName:  String
+    private lateinit var mBoardDetails: Board
     private var mBoardImageURL: String = ""
+    private var isBoardUpdate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +42,15 @@ class CreateBoardActivity : BaseActivity() {
 
         if(intent.hasExtra(Constants.NAME)){
             mUserName = intent.getStringExtra(Constants.NAME)!!
+        }
+
+        if(intent.hasExtra(Constants.EDIT_BOARD)){
+            mBoardDetails = intent.getParcelableExtra(Constants.EDIT_BOARD)!!
+            et_board_name.setText(mBoardDetails.name)
+            Log.i("CreateBoard[check id]",mBoardDetails.toString())
+            btn_create.visibility = View.GONE
+            btn_update.visibility = View.VISIBLE
+            isBoardUpdate = true
         }
 
         iv_board_image.setOnClickListener {
@@ -64,6 +75,15 @@ class CreateBoardActivity : BaseActivity() {
             }else{
                 showProgressDialog(resources.getString(R.string.please_wait))
                 createBoard()
+            }
+        }
+
+        btn_update.setOnClickListener {
+            if(mSelectedImageFileUri != null){
+                uploadBoardImage()
+            }else{
+                showProgressDialog(resources.getString(R.string.please_wait))
+                updateBoard()
             }
         }
     }
@@ -93,6 +113,21 @@ class CreateBoardActivity : BaseActivity() {
         FirestoreClass().createBoard(this, board)
     }
 
+    private fun updateBoard(){
+        val assignedUsersArrayList: ArrayList<String> = ArrayList()
+        assignedUsersArrayList.add(getCurrentUserID())
+        val board = Board(
+            et_board_name.text.toString(),
+            mBoardImageURL,
+            mBoardDetails.name,
+            assignedUsersArrayList,
+            mBoardDetails.documentId,
+            mBoardDetails.taskList
+        )
+
+        FirestoreClass().updateBoard(this, board)
+    }
+
     private fun uploadBoardImage(){
         showProgressDialog(resources.getString(R.string.please_wait))
         val storageRef = FirebaseStorage.getInstance().reference.child(
@@ -110,7 +145,11 @@ class CreateBoardActivity : BaseActivity() {
                         uri ->
                     Log.i("Downloadable Image File", uri.toString())
                     mBoardImageURL = uri.toString()
-                    createBoard()
+                    if(isBoardUpdate){
+                        updateBoard()
+                    }else{
+                        createBoard()
+                    }
                 }
             }
             .addOnFailureListener { exception ->

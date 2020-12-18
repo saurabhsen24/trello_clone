@@ -1,13 +1,18 @@
-package com.projemanag.adapters
+package com.saurabhsen.projectmanagementapp.adapters
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.saurabhsen.projectmanagementapp.R
+import com.saurabhsen.projectmanagementapp.firebase.FirestoreClass
 import com.saurabhsen.projectmanagementapp.models.Board
+import com.saurabhsen.projectmanagementapp.ui.activities.CreateBoardActivity
+import com.saurabhsen.projectmanagementapp.utils.Constants
 import kotlinx.android.synthetic.main.item_board.view.*
 
 open class BoardItemsAdapter(
@@ -58,6 +63,20 @@ open class BoardItemsAdapter(
 
     fun setOnClickListener(onClickListener: OnClickListener) {
         this.onClickListener = onClickListener
+    }
+
+    fun notifyEditItem(activity: Activity, position: Int, requestCode: Int) {
+        val intent = Intent(context, CreateBoardActivity::class.java)
+        intent.putExtra(Constants.EDIT_BOARD, list[position])
+        activity.startActivityForResult(intent, requestCode)
+        notifyItemChanged(position)
+    }
+
+    fun removeAt(position: Int) {
+        val model = list[position]
+        list.removeAt(position)
+        FirestoreClass().deleteBoard(model)
+        notifyDataSetChanged()
     }
 
     interface OnClickListener {
